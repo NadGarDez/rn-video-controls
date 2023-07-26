@@ -770,6 +770,9 @@ export default class VideoPlayer extends Component {
 
 
   setPictureInPicture = ()=>{
+    if(this.state.isFullscreen){
+      this._toggleFullscreen()
+    }
     this.events.onPressPip()
     this.player.ref.setPictureInPicture(true)
   }
