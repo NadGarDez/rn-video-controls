@@ -24,7 +24,8 @@
   },
   "peerDependencies": {
     "react-native": ">=0.46.0",
-    "react-native-video": ">=2.0.0"
+    "react-native-video": ">=2.0.0",
+    "react-native-svg": "^13.10.0"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "^0.0.5",

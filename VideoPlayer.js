@@ -15,6 +15,7 @@ import {
   AppState,
 } from 'react-native';
 import padStart from 'lodash/padStart';
+import { PipIcon } from './assets/svg/svgIcons';
 
 export default class VideoPlayer extends Component {
   static defaultProps = {
@@ -954,10 +955,7 @@ export default class VideoPlayer extends Component {
 
   renderPictureInPictureButton(){
     return this.renderControl(
-        <Image
-          source={require('./assets/img/pictureInPicture.png')}
-          style={{ width: 20, height: 20}}
-        />
+        <PipIcon width={20} height={20} />
       ,
       ()=> this.setPictureInPicture(),
       styles.controls.back,
