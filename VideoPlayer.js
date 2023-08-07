@@ -13,6 +13,7 @@ import {
   View,
   Text,
   AppState,
+  Platform,
 } from 'react-native';
 import padStart from 'lodash/padStart';
 import { PipIcon } from './assets/svg/svgIcons';
@@ -774,8 +775,10 @@ export default class VideoPlayer extends Component {
     if(this.state.isFullscreen){
       this._toggleFullscreen()
     }
-    this.events.onPressPip()
-    this.player.ref.setPictureInPicture(true)
+    this.events.onPressPip(this.state)
+    if(Platform.OS === "ios"){
+      this.player.ref.setPictureInPicture(true)
+    }
   }
 
   handleAppStateChange = (newState) => {
