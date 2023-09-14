@@ -13,10 +13,8 @@ import {
   View,
   Text,
   AppState,
-  Platform,
 } from 'react-native';
 import padStart from 'lodash/padStart';
-import { PipIcon } from './assets/svg/svgIcons';
 
 export default class VideoPlayer extends Component {
   static defaultProps = {
@@ -772,18 +770,20 @@ export default class VideoPlayer extends Component {
 
 
   setPictureInPicture = ()=>{
-    if(this.state.isFullscreen){
-      this._toggleFullscreen()
-    }
-    this.events.onPressPip(this.state)
-    if(Platform.OS === "ios"){
-      this.player.ref.setPictureInPicture(true)
-    }
+    this.events.onPressPip()
+    this.player.ref.setPictureInPicture(true)
   }
 
   handleAppStateChange = (newState) => {
     if(this.state.appState === "background" || this.state.appState === "inactive" && newState === 'active'){
       this.events.onRestoreForeground !== null ? this.events.onRestoreForeground() : null
+    }
+    if(this.state.appState === "active"  && newState === 'background' || newState === "inactive") {
+      try {
+        this.player.ref.playVideo()
+      }catch(e){
+        console.log(e)
+      }
     }
     this.setState({
       appState: newState,
@@ -958,7 +958,10 @@ export default class VideoPlayer extends Component {
 
   renderPictureInPictureButton(){
     return this.renderControl(
-        <PipIcon width={20} height={20} />
+        <Image
+          source={require('./assets/img/pictureInPicture.png')}
+          style={{ width: 20, height: 20}}
+        />
       ,
       ()=> this.setPictureInPicture(),
       styles.controls.back,
@@ -1106,6 +1109,7 @@ export default class VideoPlayer extends Component {
    * Render the seekbar and attach its handlers
    */
   renderSeekbar() {
+    console.log(this.state.seekerPosition,this.state.seekerFillWidth)
     return (
       <View
         style={styles.seekbar.container}
@@ -1121,7 +1125,7 @@ export default class VideoPlayer extends Component {
             style={[
               styles.seekbar.fill,
               {
-                width: this.state.seekerFillWidth,
+                width: isNaN(this.state.seekerFillWidth) ? 100 : this.state.seekerFillWidth,
                 backgroundColor: this.props.seekColor || '#FFF',
               },
             ]}
@@ -1129,7 +1133,7 @@ export default class VideoPlayer extends Component {
           />
         </View>
         <View
-          style={[styles.seekbar.handle, {left: this.state.seekerPosition}]}
+          style={[styles.seekbar.handle, {left: isNaN(this.state.seekerPosition) ? 100 : this.state.seekerPosition}]}
           pointerEvents={'none'}>
           <View
             style={[
